@@ -1,0 +1,41 @@
+
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+bin/
+
+
+.env
+!*.example
+!.env.example
+
+# Исключаем кэш Go
+/.go/
+/go/
+
+# Исключаем бинарные и временные файлы
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Исключаем папку vendor (если используется)
+vendor/
+
+# Исключаем файлы модулей Go
+go.mod
+go.sum
+
+# Исключаем логи и системные файлы
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
