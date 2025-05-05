@@ -1,18 +1,28 @@
 package server
 
+// @title Effective Mobile Test Task API
+// @version 1.0
+// @description API for managing people information
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost
+// @BasePath /people
 import (
 	"context"
+	_ "effective_mobile_test_task/docs"
 	"effective_mobile_test_task/internal/app/metrics"
 	"effective_mobile_test_task/internal/app/services"
 	"effective_mobile_test_task/internal/domain/cache"
 	"encoding/json"
 	"errors"
 	"fmt"
+	httpSwagger "github.com/swaggo/http-swagger"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
-
-	"log/slog"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -40,6 +50,14 @@ func (s *Server) Start(addr string) error {
 		s.metrics.InstrumentHandler("GET", "/people/{id}", s.handleGetPersonByID),
 	)
 
+	mux.HandleFunc(
+		"GET /swagger/",
+
+		httpSwagger.Handler(
+			httpSwagger.URL("/swagger/doc.json"), // URL к swagger.json
+		),
+	)
+
 	// Добавляем endpoint для метрик
 	mux.HandleFunc("GET /metrics", s.metrics.MetricsHandler().ServeHTTP)
 
@@ -47,6 +65,18 @@ func (s *Server) Start(addr string) error {
 	return http.ListenAndServe(":"+addr, mux)
 }
 
+// GetPersonByID godoc
+// @Summary Get person by ID
+// @Description Get detailed information about a person by their ID
+// @Tags people
+// @Accept json
+// @Produce json
+// @Param id path int true "Person ID"
+// @Success 200 {object} entities.Person "Successfully retrieved person"
+// @Failure 400 {string} string "Invalid ID format"
+// @Failure 404 {string} string "Person not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /people/{id} [get]
 func (s *Server) handleGetPersonByID(w http.ResponseWriter, r *http.Request) {
 
 	if val, err := s.cache.Get(""); err != nil {
