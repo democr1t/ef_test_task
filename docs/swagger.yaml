@@ -1,0 +1,246 @@
+basePath: /
+definitions:
+  models.Person:
+    properties:
+      age:
+        example: 40
+        type: integer
+      created_at:
+        type: string
+      gender:
+        example: male
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: dmitry
+        type: string
+      nationality:
+        example: RU
+        type: string
+      patronymic:
+        example: vasilyevich
+        type: string
+      surname:
+        example: vasiliev
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.PersonCreateRequest:
+    properties:
+      name:
+        example: dmitry
+        type: string
+      patronymic:
+        example: vasilyevich
+        type: string
+      surname:
+        example: vasiliev
+        type: string
+    required:
+    - name
+    - surname
+    type: object
+  models.PersonUpdateRequest:
+    properties:
+      age:
+        example: 41
+        type: integer
+      gender:
+        example: male
+        type: string
+      name:
+        example: dmitriy
+        type: string
+      nationality:
+        example: RU
+        type: string
+      patronymic:
+        example: vasilyevich
+        type: string
+      surname:
+        example: vasiliev
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: d.kruteevz@gmail.com
+    name: Dmitrky
+  description: This is a sample server for managing persons.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Person API
+  version: "1.0"
+paths:
+  /persons:
+    get:
+      consumes:
+      - application/json
+      description: Get list of persons with pagination and filtering
+      parameters:
+      - description: Filter by name
+        in: query
+        name: name
+        type: string
+      - description: Filter by surname
+        in: query
+        name: surname
+        type: string
+      - description: Filter by age
+        in: query
+        name: age
+        type: integer
+      - description: Filter by gender
+        in: query
+        name: gender
+        type: string
+      - description: Filter by nationality
+        in: query
+        name: nationality
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Person'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get list of persons
+      tags:
+      - persons
+    post:
+      consumes:
+      - application/json
+      description: Create a new person with data from external APIs
+      parameters:
+      - description: Person data
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.PersonCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Person'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new person
+      tags:
+      - persons
+  /persons/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete person by ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a person
+      tags:
+      - persons
+    put:
+      consumes:
+      - application/json
+      description: Update person data by ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Person data
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.PersonUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Person'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a person
+      tags:
+      - persons
+swagger: "2.0"
