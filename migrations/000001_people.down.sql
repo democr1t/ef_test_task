@@ -1,3 +1,0 @@
-BEGIN;
-DROP TABLE persons;
-COMMIT;
